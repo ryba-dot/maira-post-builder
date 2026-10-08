@@ -170,14 +170,15 @@ details.more-opts .inner { display: grid; gap: 14px; }
 #editor { font: 14px/1.55 var(--body); color: var(--fg); background: var(--bg); border: 1px solid var(--plum); border-radius: 8px; padding: 10px 12px; width: 100%; min-height: 360px; resize: vertical; }
 .edited { margin: 0; font-size: 13px; color: var(--muted); }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--plum); font: inherit; text-decoration: underline; cursor: pointer; }
+.actions button, .actions .btn { display: inline-flex; align-items: center; gap: 8px; }
 </style>
 
 <div class="wrap">
   <header class="hero">
     <div class="text">
-    <div class="coffee">☕ Give me time for one coffee</div>
+    <div class="coffee">🦸 Not all heroes wear capes</div>
     <h1>Our most-registered webinar yet. <em>Help us get past 200.</em></h1>
-    <p class="lede">Not all heroes wear capes. Your superpower is your LinkedIn profile: a post from you reaches more people than our company page. Write your own, or let this page write it for you in five minutes, with your own link.</p>
+    <p class="lede">Your superpower is your LinkedIn profile: a post from you reaches more people than our company page. Write your own, or let this page write it for you in five minutes, with your own link.</p>
     <div class="statline" title="Demio, 8 Oct 2026 9:00. Previous record: first MAIRA webinar, May 2026.">
       <span><b class="hot">163</b> registered</span><span>goal <b>200</b></span><span>previous record <b>102</b></span><span><b id="daysLeft">12</b> <span id="daysLabel">days to go</span></span>
     </div>
@@ -274,9 +275,9 @@ details.more-opts .inner { display: grid; gap: 14px; }
       </article>
       <p class="linknote"><span aria-hidden="true">↑</span> The link in your post is looooooong, right? Don't worry. LinkedIn shortens it to a neat lnkd.in link the moment you publish, and your tracking still works.</p>
       <div class="actions">
-        <button type="button" id="copy">Copy post</button>
-        <button type="button" class="btn ghost" id="edit">Edit text</button>
-        <a class="btn ghost" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">Open LinkedIn</a>
+        <button type="button" class="btn ghost" id="edit"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span id="editLabel">Edit text</span></button>
+        <button type="button" id="copy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy post</span></button>
+        <a class="btn ghost" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span>Open LinkedIn</span></a>
         <span id="copied" role="status"></span>
       </div>
     </div>
@@ -443,7 +444,7 @@ details.more-opts .inner { display: grid; gap: 14px; }
   var editor = document.getElementById("editor"), preview = document.getElementById("postText"), editBtn = document.getElementById("edit");
   function setEditing(onEdit) {
     editor.hidden = !onEdit; preview.hidden = onEdit;
-    editBtn.textContent = onEdit ? "Done editing" : "Edit text";
+    document.getElementById("editLabel").textContent = onEdit ? "Done editing" : "Edit text";
     if (onEdit) { editor.focus(); }
     else { preview.textContent = current; }
   }
