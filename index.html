@@ -167,6 +167,9 @@ details.more-opts .inner { display: grid; gap: 14px; }
 .linknote span { color: var(--plum); font-weight: 700; font-size: 16px; line-height: 1; }
 .callout { margin: 0; font-size: 14px; color: var(--on-cup); background: var(--cup); border-radius: 10px; padding: 10px 12px; box-shadow: 0 2px 0 var(--cup-edge); }
 .callout b { display: block; margin-bottom: 2px; }
+#editor { font: 14px/1.55 var(--body); color: var(--fg); background: var(--bg); border: 1px solid var(--plum); border-radius: 8px; padding: 10px 12px; width: 100%; min-height: 360px; resize: vertical; }
+.edited { margin: 0; font-size: 13px; color: var(--muted); }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--plum); font: inherit; text-decoration: underline; cursor: pointer; }
 </style>
 
 <div class="wrap">
@@ -265,11 +268,14 @@ details.more-opts .inner { display: grid; gap: 14px; }
           <div><b id="whoName">Roman</b><small id="whoRole">Sales at Dotidot</small></div>
         </div>
         <p id="postText"></p>
+        <textarea id="editor" aria-label="Edit your post" hidden></textarea>
+        <p class="edited" id="editedNote" hidden>You've edited the text, so changes in the builder won't overwrite it. <button type="button" class="linkbtn" id="reset">Start again from the builder</button></p>
         <div class="meta"><span>Your post</span><span id="count">0 characters</span></div>
       </article>
       <p class="linknote"><span aria-hidden="true">↑</span> The link in your post is looooooong, right? Don't worry. LinkedIn shortens it to a neat lnkd.in link the moment you publish, and your tracking still works.</p>
       <div class="actions">
         <button type="button" id="copy">Copy post</button>
+        <button type="button" class="btn ghost" id="edit">Edit text</button>
         <a class="btn ghost" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">Open LinkedIn</a>
         <span id="copied" role="status"></span>
       </div>
@@ -386,7 +392,9 @@ details.more-opts .inner { display: grid; gap: 14px; }
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
   var current = "";
+  var edited = false;
   function render() {
+    if (edited) { syncMeta(); return; }
     var name = document.getElementById("name").value.trim() || "Your Name";
     var role = roles[val("role")] || roles.other;
     var a = val("angle") || "labels";
@@ -416,12 +424,38 @@ details.more-opts .inner { display: grid; gap: 14px; }
     current = parts.join("\n\n");
 
     document.getElementById("postText").innerHTML = esc(current).replace(esc(url), '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + "</a>");
+    document.getElementById("editor").value = current;
     document.getElementById("count").textContent = current.length + " characters";
     document.getElementById("whoName").textContent = name;
     document.getElementById("whoRole").textContent = role.title;
     document.getElementById("avatar").textContent = initials(name);
     document.getElementById("tagNote").hidden = !on("x-speakers");
   }
+
+  function syncMeta() {
+    var name = document.getElementById("name").value.trim() || "Your Name";
+    var role = roles[val("role")] || roles.other;
+    document.getElementById("whoName").textContent = name;
+    document.getElementById("whoRole").textContent = role.title;
+    document.getElementById("avatar").textContent = initials(name);
+    document.getElementById("tagNote").hidden = !on("x-speakers");
+  }
+  var editor = document.getElementById("editor"), preview = document.getElementById("postText"), editBtn = document.getElementById("edit");
+  function setEditing(onEdit) {
+    editor.hidden = !onEdit; preview.hidden = onEdit;
+    editBtn.textContent = onEdit ? "Done editing" : "Edit text";
+    if (onEdit) { editor.focus(); }
+    else { preview.textContent = current; }
+  }
+  editBtn.addEventListener("click", function () { setEditing(editor.hidden); if (editor.hidden && !edited) render(); });
+  editor.addEventListener("input", function () {
+    edited = true; current = editor.value;
+    document.getElementById("count").textContent = current.length + " characters";
+    document.getElementById("editedNote").hidden = false;
+  });
+  document.getElementById("reset").addEventListener("click", function () {
+    edited = false; document.getElementById("editedNote").hidden = true; setEditing(false); render();
+  });
 
   function days() {
     var now = new Date(); var d = Math.round((new Date(2026, 9, 20) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
