@@ -224,6 +224,10 @@ details.more-opts .inner { display: grid; gap: 14px; }
 
       <div class="step">
         <h2><span>3</span>Style</h2>
+        <div class="chips" role="radiogroup" aria-label="Post language">
+          <label class="chip"><input type="radio" name="lang" id="lang-en" value="en" checked><span>🇬🇧 English</span></label>
+          <label class="chip"><input type="radio" name="lang" id="lang-cs" value="cs"><span>🇨🇿 Čeština</span></label>
+        </div>
         <div class="inline">
           <div class="chips" role="radiogroup" aria-label="Style">
             <label class="chip"><input type="radio" name="tone" id="tone-straight" value="straight" checked><span>Straight</span></label>
@@ -370,6 +374,87 @@ details.more-opts .inner { display: grid; gap: 14px; }
     agency:    "the process they use with their own e-commerce clients",
     record:    "the full peak-season playbook, from product labels to countdown ads"
   };
+
+  var CS = {
+    roles: {
+      sales:   { title: "Sales v Dotidotu", line: "S e-commerce týmy mluvím každý týden a příprava na peak season je teď na seznamu u všech. Tenhle webinář je dobrá zkratka." },
+      cs:      { title: "Customer Success v Dotidotu", line: "Jestli patříte mezi naše klienty, přijďte si pro tipy, jak připravit feedy a kampaně ještě před nejrušnějšími týdny roku." },
+      auto:    { title: "Automation Strategist v Dotidotu", line: "Automatizace pro klienty nastavuju každý den. Tady uvidíte ty, na kterých před Black Friday záleží nejvíc." },
+      product: { title: "Produktový tým Dotidotu", line: "Dotidot vyvíjíme a vždycky je dobré vidět, jak ho agentura používá pod skutečným tlakem peak season." },
+      lead:    { title: "Dotidot", line: "MAIRA je performance agentura, která kampaně svých klientů řídí v Dotidotu. 20. října ukáže, jak se na peak season připravuje." },
+      other:   { title: "Dotidot", line: "Sdílím webinář zdarma, který náš tým pořádá s agenturou MAIRA." }
+    },
+    hooks: {
+      labels: {
+        straight: "Které produkty si před Black Friday zaslouží vlastní štítek?",
+        funny: "Ne každý produkt si na Black Friday zaslouží reflektor. Některé stačí nechat v koutě.",
+        curious: "Jak rozhodujete, které produkty dostanou rozpočet na Black Friday?",
+        smart: "Rozpočet na Black Friday jde podle štítků produktů. Nastavte je v říjnu, ne v listopadu."
+      },
+      countdown: {
+        straight: "Chcete reklamy s odpočtem, které se na Black Friday aktualizují samy?",
+        funny: "Nikdo nechce o půlnoci ručně přepisovat „Už jen 3 dny!“.",
+        curious: "Jak dostat do reklam naléhavost, aniž byste je každé ráno přepisovali?",
+        smart: "Dynamické proměnné za vás odpočítávají do Black Friday, ve všech reklamách najednou."
+      },
+      creatives: {
+        straight: "Sezónní kreativy pro Metu bez čekání na grafika?",
+        funny: "Seznam úkolů vašeho grafika na Black Friday je už teď moc dlouhý.",
+        curious: "Co kdyby vaše reklamy na Metě dostaly sezónní vzhled bez zadání pro grafika?",
+        smart: "Sezónní kreativy pro Metu můžou vzniknout přímo z produktového feedu."
+      },
+      data: {
+        straight: "Co vám loňský Black Friday řekl o tom letošním?",
+        funny: "Loňský Black Friday vám nechal data. Je čas je otevřít.",
+        curious: "Podívali jste se na čísla z minulé sezóny, než začnete plánovat tu letošní?",
+        smart: "Produktová data z minulé sezóny jsou ta nejlevnější předpověď Black Friday, kterou máte."
+      },
+      bf: {
+        straight: "Do Black Friday zbývá {w}. Jsou vaše kampaně připravené?",
+        funny: "Do Black Friday zbývá {w}. Vaše kampaně to vědí, i když kalendář ještě ne.",
+        curious: "{W} do Black Friday. Co byste opravili jako první?",
+        smart: "{W} stačí na otestování nastavení pro Black Friday. Dva týdny ne."
+      },
+      season: {
+        straight: "Co v peak season doopravdy hýbe výkonem?",
+        funny: "Každý má na peak season svou teorii. MAIRA přinese čísla.",
+        curious: "Co se ve vašich kampaních opravdu změní mezi říjnem a Vánoci?",
+        smart: "O výkonu v peak season se rozhoduje produkt po produktu."
+      },
+      agency: {
+        straight: "Jak performance agentura připravuje své klienty na Black Friday?",
+        funny: "Agentury v listopadu moc nespí. MAIRA proto plánuje už v říjnu.",
+        curious: "Napadlo vás někdy, jak vypadá checklist agentury před Black Friday?",
+        smart: "Agentura, která připravuje víc e-shopů najednou, potřebuje proces. MAIRA ukáže ten svůj."
+      },
+      record: {
+        straight: "Na náš webinář s agenturou MAIRA se přihlásilo víc lidí než na kterýkoli jiný webinář Dotidotu.",
+        funny: "Na webinář o Black Friday se přihlásilo přes 160 lidí. V říjnu.",
+        curious: "Proč se přes 160 PPC specialistů hlásí na webinář o Black Friday už v říjnu?",
+        smart: "Přes 160 PPC specialistů už plánuje Black Friday. A vy?"
+      }
+    },
+    topics: {
+      labels: "jak najít produkty, které si zaslouží vlastní štítek",
+      countdown: "reklamy s odpočtem a dynamickými proměnnými, které se aktualizují samy",
+      creatives: "sezónní kreativy z Image Editoru v Dotidotu",
+      data: "co čísla z minulé sezóny říkají o té letošní",
+      bf: "co nastavit, dokud je ještě čas to otestovat",
+      season: "co v peak season doopravdy hýbe výkonem",
+      agency: "proces, který používá u vlastních e-commerce klientů",
+      record: "celý postup na peak season, od štítků produktů po reklamy s odpočtem"
+    },
+    body: "20. října v 10:00 ukáže performance tým agentury MAIRA, jak v Dotidotu připravuje e-commerce kampaně na Black Friday, Cyber Monday a Vánoce. Jedno z témat: {topic}. Zdarma, hodina, v angličtině.",
+    bf: "Do Black Friday zbývá {w}.",
+    team: "Vezměte s sebou celý PPC tým: každý se registruje zvlášť a dostane vlastní odkaz do webináře.",
+    qa: "Na konci je Q&A, tak si připravte otázky.",
+    speakers: "Za MAIRA vystoupí Filip Lorenz, Jiří Markytán, Anton Gorbenko a Filip Koštěl.",
+    reg: "Registrace tady: "
+  };
+  function csWeeks(cap) {
+    var w = weeks(), s = w + (w === 1 ? " týden" : (w >= 2 && w <= 4 ? " týdny" : " týdnů"));
+    return s;
+  }
   function weeks() { return Math.max(1, Math.floor((BLACK_FRIDAY - new Date()) / 604800000)); }
   function wText(cap) { var w = weeks(), s = w + (w === 1 ? " week" : " weeks"); return cap ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
@@ -398,7 +483,9 @@ details.more-opts .inner { display: grid; gap: 14px; }
   function render() {
     if (edited) { syncMeta(); return; }
     var name = document.getElementById("name").value.trim() || "Your Name";
-    var role = roles[val("role")] || roles.other;
+    var lang = val("lang") || "en";
+    var L = lang === "cs";
+    var role = (L ? CS.roles : roles)[val("role")] || (L ? CS.roles : roles).other;
     var a = val("angle") || "labels";
     var tone = val("tone") || "straight";
     var level = +document.getElementById("emoji").value;
@@ -408,20 +495,20 @@ details.more-opts .inner { display: grid; gap: 14px; }
     function x(type, line) { return level === 2 ? em[type] + " " + line : line; }
 
     var parts = [];
-    var hook = hooks[a][tone].replace("{w}", wText(false)).replace("{W}", wText(true));
+    var hook = L ? CS.hooks[a][tone].replace("{w}", csWeeks()).replace("{W}", csWeeks()) : hooks[a][tone].replace("{w}", wText(false)).replace("{W}", wText(true));
     parts.push((level ? em.hook + " " : "") + hook);
-    parts.push((level === 2 ? em.body + " " : "") + "On 20 October at 10:00 CEST, MAIRA's performance team will show how they get e-commerce campaigns ready for Black Friday, Cyber Monday and Christmas in Dotidot. One of the topics: " + topics[a] + ". Free, one hour, in English.");
+    parts.push((level === 2 ? em.body + " " : "") + (L ? CS.body.replace("{topic}", CS.topics[a]) : "On 20 October at 10:00 CEST, MAIRA's performance team will show how they get e-commerce campaigns ready for Black Friday, Cyber Monday and Christmas in Dotidot. One of the topics: " + topics[a] + ". Free, one hour, in English."));
     parts.push(own || role.line);
     var extras = [];
     if (on("x-bf") && a !== "bf") {
       var w = Math.floor((BLACK_FRIDAY - new Date()) / 604800000);
-      if (w >= 1) extras.push(x("bf", "Black Friday is " + w + (w === 1 ? " week" : " weeks") + " away."));
+      if (w >= 1) extras.push(x("bf", L ? CS.bf.replace("{w}", csWeeks()) : "Black Friday is " + w + (w === 1 ? " week" : " weeks") + " away."));
     }
-    if (on("x-team")) extras.push(x("team", "Bring your whole PPC team: everyone registers separately and gets their own join link."));
-    if (on("x-qa")) extras.push(x("qa", "There's a Q&A at the end, so bring your questions."));
-    if (on("x-speakers")) extras.push(x("speakers", "On stage from MAIRA: Filip Lorenz, Jiří Markytán, Anton Gorbenko and Filip Koštěl."));
+    if (on("x-team")) extras.push(x("team", L ? CS.team : "Bring your whole PPC team: everyone registers separately and gets their own join link."));
+    if (on("x-qa")) extras.push(x("qa", L ? CS.qa : "There's a Q&A at the end, so bring your questions."));
+    if (on("x-speakers")) extras.push(x("speakers", L ? CS.speakers : "On stage from MAIRA: Filip Lorenz, Jiří Markytán, Anton Gorbenko and Filip Koštěl."));
     if (extras.length) parts.push(extras.join("\n"));
-    parts.push((level ? em.reg + " " : "") + "Register here: " + url);
+    parts.push((level ? em.reg + " " : "") + (L ? CS.reg : "Register here: ") + url);
     if (on("x-tags")) parts.push("#Webinar #PPC #BlackFriday #PeakSeason #Ecommerce #PerformanceMarketing #Dotidot #MAIRA");
     current = parts.join("\n\n");
 
@@ -436,7 +523,8 @@ details.more-opts .inner { display: grid; gap: 14px; }
 
   function syncMeta() {
     var name = document.getElementById("name").value.trim() || "Your Name";
-    var role = roles[val("role")] || roles.other;
+    var R = val("lang") === "cs" ? CS.roles : roles;
+    var role = R[val("role")] || R.other;
     document.getElementById("whoName").textContent = name;
     document.getElementById("whoRole").textContent = role.title;
     document.getElementById("avatar").textContent = initials(name);
