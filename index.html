@@ -1,0 +1,413 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"></head><body style="margin:0">
+<title>MAIRA Post Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: brand header with live numbers, then a two-pane workbench: choices left, the post as LinkedIn will show it right. */
+:root {
+  --bg: #f6f4f8;
+  --surface: #ffffff;
+  --fg: #1d1626;
+  --muted: #6a6274;
+  --line: #e4dfe9;
+  --plum: #5a0078;
+  --plum-soft: #eee5f1;
+  --coral: #ff264a;
+  --on-plum: #ffffff;
+  --cup: #ffdd00;
+  --on-cup: #1d1626;
+  --cup-edge: #d9b800;
+  --display: "Poppins", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141018; --surface: #1f1826; --fg: #f1ecf4; --muted: #a79fb1; --line: #352c3e;
+    --plum: #c895e0; --plum-soft: #2e2238; --coral: #ff5c75; --on-plum: #1d1626; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141018; --surface: #1f1826; --fg: #f1ecf4; --muted: #a79fb1; --line: #352c3e;
+  --plum: #c895e0; --plum-soft: #2e2238; --coral: #ff5c75; --on-plum: #1d1626; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 28px; }
+header { display: grid; gap: 14px; }
+.eyebrow { font-size: 13px; color: var(--muted); letter-spacing: .02em; }
+h1 { font: 700 clamp(26px, 4.4vw, 40px)/1.15 var(--display); margin: 0; text-wrap: balance; max-width: 22ch; }
+h1 em { font-style: normal; color: var(--plum); }
+.lede { margin: 0; max-width: 62ch; color: var(--muted); }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; display: grid; gap: 2px; min-width: 0; }
+.stat b { font: 700 24px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--muted); }
+.stat.hot b { color: var(--coral); }
+.source { font-size: 12px; color: var(--muted); margin: 0; }
+.coffee { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; background: var(--cup); color: var(--on-cup); font: 600 15px var(--display); box-shadow: 0 2px 0 var(--cup-edge); transform: rotate(-1.5deg); }
+.flow { list-style: none; counter-reset: s; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.flow li { counter-increment: s; display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px 6px 6px; font-size: 14px; }
+.flow li::before { content: counter(s); display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--plum); color: var(--on-plum); font: 600 12px var(--body); }
+.bar { position: relative; height: 10px; border-radius: 999px; background: var(--plum-soft); max-width: 560px; }
+.bar span { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--plum); }
+.bar i { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--coral); }
+
+.bench { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 24px; align-items: start; }
+@media (max-width: 820px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+form { display: grid; gap: 22px; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; min-width: 0; }
+legend { font: 600 16px/1.3 var(--display); padding: 0; margin-bottom: 10px; }
+legend small { font: 400 13px var(--body); color: var(--muted); margin-left: 6px; }
+label.field { display: grid; gap: 6px; font-size: 14px; }
+input[type=text], textarea {
+  font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 12px; width: 100%;
+}
+textarea { min-height: 70px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, .chip input:focus-visible + span, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--plum); outline-offset: 2px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip span {
+  display: inline-block; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); font-size: 14px; cursor: pointer;
+}
+.chip input:checked + span { background: var(--plum); border-color: var(--plum); color: var(--on-plum); }
+.angles { display: grid; gap: 8px; }
+.angle { position: relative; display: block; }
+.angle input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.angle span { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; }
+.angle span b { font-weight: 600; font-size: 14px; }
+.angle span i { font-style: normal; font-size: 13px; color: var(--muted); }
+.angle input:checked + span { border-color: var(--plum); box-shadow: inset 0 0 0 1px var(--plum); background: var(--plum-soft); }
+.angle input:focus-visible + span { outline: 2px solid var(--plum); outline-offset: 2px; }
+.toggle { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+.toggle input { margin-top: 3px; accent-color: var(--plum); }
+
+.out { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: grid; gap: 12px; min-width: 0; }
+.post { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.who { display: flex; gap: 10px; align-items: center; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--plum); color: var(--on-plum); display: grid; place-items: center; font: 600 16px var(--display); flex: none; }
+.who b { display: block; font-size: 14px; }
+.who small { color: var(--muted); font-size: 12px; }
+#postText { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; margin: 0; }
+#postText a { color: var(--plum); }
+.meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; font-variant-numeric: tabular-nums; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button, .btn {
+  font: 600 14px var(--body); border-radius: 8px; padding: 11px 16px; cursor: pointer; text-decoration: none;
+  border: 1px solid var(--plum); background: var(--plum); color: var(--on-plum);
+}
+.btn.ghost { background: transparent; color: var(--plum); }
+#copied { font-size: 13px; color: var(--muted); }
+
+.more { display: grid; gap: 12px; }
+.more h2 { font: 600 18px var(--display); margin: 0; }
+.tips { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.tip { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.tip b { font-size: 14px; }
+.tip p { margin: 0; font-size: 14px; color: var(--muted); }
+.tip a { color: var(--plum); }
+.tip code { font-size: 12px; overflow-wrap: anywhere; background: var(--plum-soft); padding: 6px 8px; border-radius: 6px; display: block; color: var(--fg); }
+@media (prefers-reduced-motion: no-preference) { .chip span, .angle span, button { transition: background .15s, border-color .15s; } }
+.range { display: grid; gap: 6px; }
+.range input { width: 100%; accent-color: var(--plum); }
+.range .ticks { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.checks { display: grid; gap: 8px; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.speakers { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 13px; }
+.speakers a { color: var(--plum); }
+
+.wrap { gap: 22px; }
+header { gap: 12px; }
+.statline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.statline b { color: var(--fg); font-weight: 600; }
+.statline .hot { color: var(--coral); }
+.bar { max-width: 420px; height: 8px; }
+.step { display: grid; gap: 10px; }
+.step h2 { font: 600 16px/1.3 var(--display); margin: 0; display: flex; gap: 8px; align-items: center; }
+.step h2 span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--plum); color: var(--on-plum); font: 600 12px var(--body); }
+.inline { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: end; }
+@media (max-width: 520px) { .inline { grid-template-columns: minmax(0, 1fr); } }
+details.more-opts { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 12px 14px; }
+details.more-opts summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+details.more-opts[open] summary { margin-bottom: 12px; }
+details.more-opts .inner { display: grid; gap: 14px; }
+.tipsrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.tipsrow div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 14px; color: var(--muted); }
+.tipsrow b { display: block; color: var(--fg); margin-bottom: 2px; }
+.tipsrow a { color: var(--plum); }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="coffee">☕ Give me time for one coffee</div>
+    <h1>Our most-registered webinar yet. <em>Help us get past 200.</em></h1>
+    <p class="lede">Write your own LinkedIn post, or let this page write it for you in five minutes, with your own link.</p>
+    <div class="statline" title="Demio, 8 Oct 2026 9:00. Previous record: first MAIRA webinar, May 2026.">
+      <span><b class="hot">163</b> registered</span><span>goal <b>200</b></span><span>record <b>102</b></span><span><b id="daysLeft">12</b> <span id="daysLabel">days to go</span></span>
+    </div>
+    <div class="bar" role="img" aria-label="163 of 300 registrations, goal 200"><span style="width:54.3%"></span><i style="left:66.7%"></i></div>
+  </header>
+
+  <section class="bench">
+    <form id="builder" autocomplete="off">
+      <div class="step">
+        <h2><span>1</span>You</h2>
+        <label class="field" for="name">Your first name
+          <input type="text" id="name" value="Jana" placeholder="e.g. Roman">
+        </label>
+        <p class="note">Goes into your link for the leaderboard. Same name as a colleague? Add an initial: Roman K.</p>
+        <div class="chips" role="radiogroup" aria-label="Your role">
+          <label class="chip"><input type="radio" name="role" id="role-sales" value="sales" checked><span>Sales</span></label>
+          <label class="chip"><input type="radio" name="role" id="role-cs" value="cs"><span>Customer Success</span></label>
+          <label class="chip"><input type="radio" name="role" id="role-auto" value="auto"><span>Automation</span></label>
+          <label class="chip"><input type="radio" name="role" id="role-product" value="product"><span>Product &amp; dev</span></label>
+          <label class="chip"><input type="radio" name="role" id="role-lead" value="lead"><span>Leadership</span></label>
+          <label class="chip"><input type="radio" name="role" id="role-other" value="other"><span>Other</span></label>
+        </div>
+      </div>
+
+      <div class="step">
+        <h2><span>2</span>Topic</h2>
+        <div class="chips" role="radiogroup" aria-label="Topic">
+          <label class="chip"><input type="radio" name="angle" id="a-labels" value="labels" checked><span>Product labels</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-countdown" value="countdown"><span>Countdown ads</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-creatives" value="creatives"><span>Seasonal creatives</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-data" value="data"><span>Last season's data</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-bf" value="bf"><span>Black Friday countdown</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-season" value="season"><span>What moves peak season</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-agency" value="agency"><span>An agency's playbook</span></label>
+          <label class="chip"><input type="radio" name="angle" id="a-record" value="record"><span>Record registrations</span></label>
+        </div>
+      </div>
+
+      <div class="step">
+        <h2><span>3</span>Style</h2>
+        <div class="inline">
+          <div class="chips" role="radiogroup" aria-label="Style">
+            <label class="chip"><input type="radio" name="tone" id="tone-straight" value="straight" checked><span>Straight</span></label>
+            <label class="chip"><input type="radio" name="tone" id="tone-funny" value="funny"><span>Funny</span></label>
+            <label class="chip"><input type="radio" name="tone" id="tone-curious" value="curious"><span>Curious</span></label>
+            <label class="chip"><input type="radio" name="tone" id="tone-smart" value="smart"><span>Smart</span></label>
+          </div>
+          <div class="range">
+            <label for="emoji">Emojis</label>
+            <input type="range" id="emoji" min="0" max="2" step="1" value="1">
+            <div class="ticks"><span>None</span><span>A few</span><span>Lots</span></div>
+          </div>
+        </div>
+      </div>
+
+      <details class="more-opts" open>
+        <summary>More options</summary>
+        <div class="inner">
+          <div class="checks">
+            <label class="toggle" for="x-bf"><input type="checkbox" id="x-bf"><span>Weeks to Black Friday</span></label>
+            <label class="toggle" for="x-speakers"><input type="checkbox" id="x-speakers"><span>Name the speakers from MAIRA</span></label>
+            <label class="toggle" for="x-team"><input type="checkbox" id="x-team"><span>Bring your whole PPC team</span></label>
+            <label class="toggle" for="x-qa"><input type="checkbox" id="x-qa"><span>Q&amp;A at the end</span></label>
+            <label class="toggle" for="x-tags"><input type="checkbox" id="x-tags" checked><span>Hashtags</span></label>
+          </div>
+          <p class="note" id="tagNote" hidden>Tags don't survive copy and paste, so the names come as plain text. To tag someone, type @ before the name in LinkedIn and pick them from the list.</p>
+          <label class="field" for="own">One sentence in your own words
+            <textarea id="own" placeholder="Replaces the line written for your role"></textarea>
+          </label>
+        </div>
+      </details>
+    </form>
+
+    <div class="out">
+      <article class="post" aria-live="polite">
+        <div class="who">
+          <div class="avatar" id="avatar">J</div>
+          <div><b id="whoName">Jana</b><small id="whoRole">Sales at Dotidot</small></div>
+        </div>
+        <p id="postText"></p>
+        <div class="meta"><span>Your post</span><span id="count">0 characters</span></div>
+      </article>
+      <div class="actions">
+        <button type="button" id="copy">Copy post</button>
+        <a class="btn ghost" href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">Open LinkedIn</a>
+        <span id="copied" role="status"></span>
+      </div>
+      <p class="note">LinkedIn shortens the link to lnkd.in on its own. Your tracking stays.</p>
+    </div>
+  </section>
+
+  <section class="tipsrow" aria-label="Tips">
+    <div><b>Add the picture</b>The 4:5 visual with the MAIRA speakers is in the #general message.</div>
+    <div><b>Share it back</b>Drop your post link in the #general thread. Colleagues react in the first hour.</div>
+    <div><b>No time?</b>Reshare <a href="https://lnkd.in/p/edtF6ehP" target="_blank" rel="noopener">Dotidot's post</a>. Your own reaches more people.</div>
+  </section>
+</div>
+
+<script>
+(function () {
+  var BASE = "https://www.dotidot.io/webinars/live-webinar-black-friday-christmas-prep-guide";
+  var WEBINAR = new Date("2026-10-20T10:00:00+02:00");
+  var BLACK_FRIDAY = new Date("2026-11-27T00:00:00+01:00");
+
+  var roles = {
+    sales:   { title: "Sales at Dotidot", line: "I talk to e-commerce teams every week, and peak season prep is on everyone's list right now. This session is a good shortcut." },
+    cs:      { title: "Customer Success at Dotidot", line: "If you're one of our clients, this is the session to get your feeds and campaigns ready before the busiest weeks of the year." },
+    auto:    { title: "Automation Strategist at Dotidot", line: "I set up automations for our clients every day. This session shows the ones that matter most before Black Friday." },
+    product: { title: "Product team at Dotidot", line: "We build Dotidot, and it's always good to see how an agency uses it under real peak season pressure." },
+    lead:    { title: "Dotidot", line: "MAIRA is a performance agency that runs its clients' campaigns in Dotidot. On 20 October they'll share how they prepare for peak season." },
+    other:   { title: "Dotidot", line: "Sharing a free webinar our team is running with MAIRA." }
+  };
+
+  var hooks = {
+    labels: {
+      straight: "Which products should get their own label before Black Friday?",
+      funny: "Not every product deserves the Black Friday spotlight. Some deserve a quiet corner.",
+      curious: "How do you decide which products get the Black Friday budget?",
+      smart: "Black Friday budgets follow product labels. Set the labels in October, not in November."
+    },
+    countdown: {
+      straight: "Want countdown ads that update themselves for Black Friday?",
+      funny: "Nobody wants to edit \"Only 3 days left!\" by hand at midnight.",
+      curious: "How do you add urgency to your ads without editing them every morning?",
+      smart: "Dynamic variables can count down to Black Friday for you, in every ad at once."
+    },
+    creatives: {
+      straight: "Seasonal creatives for Meta, without waiting for a designer?",
+      funny: "Your designer's Black Friday to-do list is already too long.",
+      curious: "What if your Meta ads got their seasonal look without a design ticket?",
+      smart: "Seasonal Meta creatives can come straight from your product feed."
+    },
+    data: {
+      straight: "What did last Black Friday tell you about this one?",
+      funny: "Last Black Friday left you some data. It's time to open it.",
+      curious: "Have you looked at last season's numbers before planning this one?",
+      smart: "Last season's product data is the cheapest Black Friday forecast you have."
+    },
+    bf: {
+      straight: "Black Friday is {w} away. Are your campaigns ready?",
+      funny: "Black Friday is {w} away. Your campaigns already know, even if your calendar doesn't.",
+      curious: "{W} to Black Friday. What would you fix first?",
+      smart: "{W} is enough time to test a Black Friday setup. Two weeks isn't."
+    },
+    season: {
+      straight: "What actually moves performance in peak season?",
+      funny: "Everyone has a theory about peak season. MAIRA brings the numbers.",
+      curious: "What really changes in your campaigns between October and Christmas?",
+      smart: "Peak season performance is decided product by product."
+    },
+    agency: {
+      straight: "How does a performance agency get its clients ready for Black Friday?",
+      funny: "Agencies don't get much sleep in November. MAIRA does the planning in October.",
+      curious: "Ever wondered what an agency's Black Friday checklist looks like?",
+      smart: "An agency that preps many e-shops at once needs a process. MAIRA will share theirs."
+    },
+    record: {
+      straight: "Our webinar with MAIRA is now the most popular one Dotidot has ever run.",
+      funny: "More than 160 people signed up for a Black Friday webinar. In October.",
+      curious: "Why are more than 160 PPC people signing up for a Black Friday webinar in October?",
+      smart: "More than 160 PPC people are already planning for Black Friday. Are you?"
+    }
+  };
+
+  var topics = {
+    labels:    "how they find which products deserve their own labels",
+    countdown: "countdown ads with dynamic variables that update themselves",
+    creatives: "seasonal creatives built in Dotidot's Image Editor",
+    data:      "what last season's numbers say about this one",
+    bf:        "what to set up while there's still time to test it",
+    season:    "what actually moves performance in peak season",
+    agency:    "the process they use with their own e-commerce clients",
+    record:    "the full peak-season playbook, from product labels to countdown ads"
+  };
+  function weeks() { return Math.max(1, Math.floor((BLACK_FRIDAY - new Date()) / 604800000)); }
+  function wText(cap) { var w = weeks(), s = w + (w === 1 ? " week" : " weeks"); return cap ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+  // emoji podle stylu: hook, úvod, doplňky (po řadě), registrace
+  var emojiSets = {
+    straight: { hook: "📅", body: "🎯", proof: "✅", bf: "⏳", team: "👥", qa: "💬", speakers: "🎤", reg: "👉" },
+    funny:    { hook: "🙈", body: "🛒", proof: "🔥", bf: "🦃", team: "🍿", qa: "🙋", speakers: "🎤", reg: "👉" },
+    curious:  { hook: "🤔", body: "🔍", proof: "👀", bf: "⏳", team: "🧩", qa: "❓", speakers: "🎤", reg: "👉" },
+    smart:    { hook: "📊", body: "🧠", proof: "📈", bf: "🗓️", team: "👥", qa: "🗣️", speakers: "🎤", reg: "👉" }
+  };
+
+  function slug(s) {
+    return (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "team";
+  }
+  function initials(s) {
+    var p = (s || "").trim().split(/\s+/).filter(Boolean);
+    return ((p[0] || "?")[0] + (p.length > 1 ? p[p.length - 1][0] : "")).toUpperCase();
+  }
+  function val(name) { var el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ""; }
+  function on(id) { return document.getElementById(id).checked; }
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  var current = "";
+  function render() {
+    var name = document.getElementById("name").value.trim() || "Your Name";
+    var role = roles[val("role")] || roles.other;
+    var a = val("angle") || "labels";
+    var tone = val("tone") || "straight";
+    var level = +document.getElementById("emoji").value;
+    var em = emojiSets[tone];
+    var own = document.getElementById("own").value.trim();
+    var url = BASE + "?utm_source=linkedin&utm_medium=social&utm_campaign=webinar_mairavol2&utm_content=" + slug(name);
+    function x(type, line) { return level === 2 ? em[type] + " " + line : line; }
+
+    var parts = [];
+    var hook = hooks[a][tone].replace("{w}", wText(false)).replace("{W}", wText(true));
+    parts.push((level ? em.hook + " " : "") + hook);
+    parts.push((level === 2 ? em.body + " " : "") + "On 20 October at 10:00 CEST, MAIRA's performance team will show how they get e-commerce campaigns ready for Black Friday, Cyber Monday and Christmas in Dotidot. One of the topics: " + topics[a] + ". Free, one hour, in English.");
+    parts.push(own || role.line);
+    var extras = [];
+    if (on("x-bf") && a !== "bf") {
+      var w = Math.floor((BLACK_FRIDAY - new Date()) / 604800000);
+      if (w >= 1) extras.push(x("bf", "Black Friday is " + w + (w === 1 ? " week" : " weeks") + " away."));
+    }
+    if (on("x-team")) extras.push(x("team", "Bring your whole PPC team: everyone registers separately and gets their own join link."));
+    if (on("x-qa")) extras.push(x("qa", "There's a Q&A at the end, so bring your questions."));
+    if (on("x-speakers")) extras.push(x("speakers", "On stage from MAIRA: Filip Lorenz, Jiří Markytán, Anton Gorbenko and Filip Koštěl."));
+    if (extras.length) parts.push(extras.join("\n"));
+    parts.push((level ? em.reg + " " : "") + "Register here: " + url);
+    if (on("x-tags")) parts.push("#Webinar #PPC #BlackFriday #PeakSeason #Ecommerce #PerformanceMarketing #Dotidot #MAIRA");
+    current = parts.join("\n\n");
+
+    document.getElementById("postText").innerHTML = esc(current).replace(esc(url), '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + "</a>");
+    document.getElementById("count").textContent = current.length + " characters";
+    document.getElementById("whoName").textContent = name;
+    document.getElementById("whoRole").textContent = role.title;
+    document.getElementById("avatar").textContent = initials(name);
+    document.getElementById("tagNote").hidden = !on("x-speakers");
+  }
+
+  function days() {
+    var now = new Date(); var d = Math.round((new Date(2026, 9, 20) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+    var n = document.getElementById("daysLeft"), l = document.getElementById("daysLabel");
+    if (d > 1) { n.textContent = d; l.textContent = "days to go"; }
+    else if (d === 1) { n.textContent = "1"; l.textContent = "day to go"; }
+    else if (d === 0) { n.textContent = "Today"; l.textContent = "10:00 CEST"; }
+    else { n.textContent = "Live"; l.textContent = "today or already done"; }
+  }
+
+  var form = document.getElementById("builder");
+  form.addEventListener("input", render);
+  form.addEventListener("change", render);
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
+  document.getElementById("copy").addEventListener("click", function () {
+    var status = document.getElementById("copied");
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(document.getElementById("postText"));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      status.textContent = "Text selected. Press Cmd+C or Ctrl+C to copy.";
+    }
+    try {
+      navigator.clipboard.writeText(current).then(function () { status.textContent = "Copied. Paste it into a new LinkedIn post."; }, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  days(); render();
+})();
+</script>
+</body></html>
